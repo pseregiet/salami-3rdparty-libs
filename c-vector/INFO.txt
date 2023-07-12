@@ -1,0 +1,5 @@
+Source: https://github.com/Mashpoe/c-vector
+License: BSD 3-Clause License
+Commit used: 9f01e0316bb7717150aa00b66fc746b550e28f51
+Changes:
+ * look at directory patches

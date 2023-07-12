@@ -1,0 +1,45 @@
+From 11cf191faff32c66714ddcf6300ba508da2685f1 Mon Sep 17 00:00:00 2001
+From: pseregiet <patryk.seregiet@gmail.com>
+Date: Mon, 10 Jul 2023 18:16:04 +0200
+Subject: [PATCH 3/3] allocate initial memory in vector_create
+
+---
+ vec.c | 7 ++++---
+ vec.h | 2 +-
+ 2 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/vec.c b/vec.c
+index ad41cde..45bbfb1 100644
+--- a/vec.c
++++ b/vec.c
+@@ -26,10 +26,11 @@ vector_data* vector_alloc(vec_size_t alloc, vec_size_t size)
+ 
+ vector_data* vector_get_data(vector vec) { return &((vector_data*)vec)[-1]; }
+ 
+-vector vector_create(void)
++vector vector_create(vec_size_t size, vec_size_t alloc)
+ {
+-	vector_data* v = (vector_data*)malloc(sizeof(vector_data));
+-	v->alloc = 0;
++
++	vector_data* v = (vector_data*)malloc(sizeof(vector_data) + alloc * size);
++	v->alloc = size;
+ 	v->length = 0;
+ 
+ 	return &v->buff;
+diff --git a/vec.h b/vec.h
+index ce9e43f..db30bb6 100644
+--- a/vec.h
++++ b/vec.h
+@@ -56,7 +56,7 @@ typedef char* vec_char;
+ 
+ #define vector_copy(vec) (_vector_copy((vector*)vec, sizeof(*vec)))
+ 
+-vector vector_create(void);
++vector vector_create(vec_size_t size, vec_size_t alloc);
+ 
+ void vector_free(vector vec);
+ 
+-- 
+2.41.0
+
