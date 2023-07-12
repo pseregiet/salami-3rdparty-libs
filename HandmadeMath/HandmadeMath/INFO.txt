@@ -1,6 +1,0 @@
-Source: https://github.com/HandmadeMath/Handmade-Math
-License: CC0-1.0
-Commit used: aaa767bf0b4964337404b36a3cf3dab7fc2ae91e
-Changes:
- * only HandmadeMath.h, README.md, LICENSE files taken
- * HandmadeMath.h renamed to hmm.h
