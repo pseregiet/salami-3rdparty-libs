@@ -1152,6 +1152,7 @@ typedef enum sg_cube_face {
 typedef enum sg_shader_stage {
     SG_SHADERSTAGE_VS,
     SG_SHADERSTAGE_FS,
+    SG_SHADERSTAGE_GS,
     _SG_SHADERSTAGE_FORCE_U32 = 0x7FFFFFFF
 } sg_shader_stage;
 
@@ -1919,6 +1920,7 @@ typedef struct sg_shader_desc {
     sg_shader_attr_desc attrs[SG_MAX_VERTEX_ATTRIBUTES];
     sg_shader_stage_desc vs;
     sg_shader_stage_desc fs;
+    sg_shader_stage_desc gs;
     const char* label;
     uint32_t _end_canary;
 } sg_shader_desc;
@@ -5092,6 +5094,7 @@ _SOKOL_PRIVATE GLenum _sg_gl_shader_stage(sg_shader_stage stage) {
     switch (stage) {
         case SG_SHADERSTAGE_VS:     return GL_VERTEX_SHADER;
         case SG_SHADERSTAGE_FS:     return GL_FRAGMENT_SHADER;
+        case SG_SHADERSTAGE_GS:     return GL_GEOMETRY_SHADER;
         default: SOKOL_UNREACHABLE; return 0;
     }
 }
@@ -6702,15 +6705,26 @@ _SOKOL_PRIVATE sg_resource_state _sg_gl_create_shader(_sg_shader_t* shd, const s
 
     GLuint gl_vs = _sg_gl_compile_shader(SG_SHADERSTAGE_VS, desc->vs.source);
     GLuint gl_fs = _sg_gl_compile_shader(SG_SHADERSTAGE_FS, desc->fs.source);
+    GLuint gl_gs = 0;
+    if (desc->gs.source) {
+        gl_gs = _sg_gl_compile_shader(SG_SHADERSTAGE_GS, desc->gs.source);
+        if (!gl_gs)
+            return SG_RESOURCESTATE_FAILED;
+    }
     if (!(gl_vs && gl_fs)) {
         return SG_RESOURCESTATE_FAILED;
     }
     GLuint gl_prog = glCreateProgram();
     glAttachShader(gl_prog, gl_vs);
     glAttachShader(gl_prog, gl_fs);
+    if (gl_gs)
+        glAttachShader(gl_prog, gl_gs);
+
     glLinkProgram(gl_prog);
     glDeleteShader(gl_vs);
     glDeleteShader(gl_fs);
+    if (gl_gs)
+        glDeleteShader(gl_gs);
     _SG_GL_CHECK_ERROR();
 
     GLint link_status;

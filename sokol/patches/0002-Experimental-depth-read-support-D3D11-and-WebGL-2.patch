@@ -1,7 +1,7 @@
-From 1ff67c2507a8d379107eee37cea9e8570ce6bd59 Mon Sep 17 00:00:00 2001
+From d7a459109a924c08a5535d0c126010b183f22d7f Mon Sep 17 00:00:00 2001
 From: pseregiet <patryk.seregiet@gmail.com>
 Date: Sun, 16 Jan 2022 21:55:31 +0100
-Subject: [PATCH 2/2] Experimental depth read support, D3D11 and WebGL 2
+Subject: [PATCH 2/4] Experimental depth read support, D3D11 and WebGL 2
 
 by peter.hillerstrom@hiberworld.com
 rebased for new sokol
@@ -226,5 +226,5 @@ index cf61442..ec893f7 100644
              [_sg.mtl.cmd_encoder setFragmentSamplerState:_sg_mtl_id(img->mtl.sampler_state) atIndex:slot];
          }
 -- 
-2.35.0
+2.41.0
 
